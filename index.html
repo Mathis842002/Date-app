@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Tu veux aller en date avec moi ? 💖</title>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: Arial, sans-serif;
+}
+
+body{
+    background:black;
+    color:white;
+    overflow:hidden;
+    height:100vh;
+}
+
+.screen{
+    display:none;
+    height:100vh;
+    width:100vw;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    position:relative;
+    text-align:center;
+    padding:20px;
+}
+
+.active{
+    display:flex;
+}
+
+h1{
+    font-size:2.2rem;
+    margin-bottom:30px;
+    z-index:2;
+}
+
+.buttons{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+    justify-content:center;
+    z-index:2;
+}
+
+button{
+    border:none;
+    padding:16px 28px;
+    border-radius:20px;
+    font-size:1.1rem;
+    cursor:pointer;
+    transition:0.2s ease;
+    position:relative;
+}
+
+.yes-btn{
+    background:#ff4fa3;
+    color:white;
+}
+
+.no-btn{
+    background:#2a2a2a;
+    color:white;
+    position:absolute;
+}
+
+.date-option{
+    background:#1f1f1f;
+    color:white;
+    margin:10px;
+}
+
+.date-option:hover{
+    transform:scale(1.08);
+}
+
+#finalText{
+    font-size:4rem;
+    animation: pop 0.7s ease;
+}
+
+.sub{
+    margin-top:15px;
+    color:#ccc;
+    font-size:1.1rem;
+}
+
+.emoji{
+    position:absolute;
+    font-size:24px;
+    opacity:0.8;
+    animation: float linear infinite;
+}
+
+@keyframes float{
+    from{
+        transform:translateY(100vh);
+    }
+    to{
+        transform:translateY(-120vh);
+    }
+}
+
+@keyframes pop{
+    0%{
+        transform:scale(0.5);
+        opacity:0;
+    }
+    100%{
+        transform:scale(1);
+        opacity:1;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div id="screen1" class="screen active">
+    <h1>Tu veux aller en date avec moi ? 🥹🖤</h1>
+
+    <div class="buttons">
+        <button class="yes-btn" onclick="showDates()">
+            Oui 💖
+        </button>
+
+        <button id="noBtn" class="no-btn">
+            Non 😒
+        </button>
+    </div>
+</div>
+
+<div id="screen2" class="screen">
+    <h1>Choisis notre date 👀✨</h1>
+
+    <div class="buttons">
+        <button class="date-option" onclick="itsADate()">
+            🌌 Voir les étoiles + surprise…
+        </button>
+
+        <button class="date-option" onclick="itsADate()">
+            🎳 Prendre ta revanche au bowling
+        </button>
+
+        <button class="date-option" onclick="itsADate()">
+            🌹 Visite nocturne du Clos des Roses
+        </button>
+    </div>
+</div>
+
+<div id="screen3" class="screen">
+    <h1 id="finalText">IT’S A DATE 💫</h1>
+    <p class="sub">
+        T’avais pas vraiment le choix de toute façon 😌
+    </p>
+</div>
+
+<script>
+const noBtn = document.getElementById("noBtn");
+
+// Position initiale
+moveButton();
+
+function moveButton() {
+    const maxX = window.innerWidth - 140;
+    const maxY = window.innerHeight - 80;
+
+    const x = Math.random() * maxX;
+    const y = Math.random() * maxY;
+
+    noBtn.style.left = `${x}px`;
+    noBtn.style.top = `${y}px`;
+}
+
+// PC : fuit la souris
+noBtn.addEventListener("mouseover", moveButton);
+
+// Téléphone : fuit le doigt
+noBtn.addEventListener("touchstart", (e)=>{
+    e.preventDefault();
+    moveButton();
+});
+
+// Si jamais elle arrive à cliquer 😭
+noBtn.addEventListener("click", moveButton);
+
+function showDates(){
+    document.getElementById("screen1").classList.remove("active");
+    document.getElementById("screen2").classList.add("active");
+}
+
+function itsADate(){
+    document.getElementById("screen2").classList.remove("active");
+    document.getElementById("screen3").classList.add("active");
+
+    fireworkLoop();
+}
+
+function fireworkLoop(){
+    const duration = 4000;
+    const end = Date.now() + duration;
+
+    const interval = setInterval(() => {
+
+        confetti({
+            particleCount: 80,
+            spread: 100,
+            origin: {
+                x: Math.random(),
+                y: Math.random() - 0.2
+            }
+        });
+
+        if(Date.now() > end){
+            clearInterval(interval);
+        }
+
+    }, 250);
+}
+
+// emojis flottants
+const emojis = ["✨","🌙","💖","⭐","🥹","💫","🖤","🌌"];
+
+for(let i = 0; i < 40; i++){
+    const span = document.createElement("span");
+    span.classList.add("emoji");
+
+    span.innerText =
+        emojis[Math.floor(Math.random() * emojis.length)];
+
+    span.style.left = Math.random()*100 + "vw";
+    span.style.animationDuration =
+        (6 + Math.random()*8) + "s";
+    span.style.fontSize =
+        (20 + Math.random()*25) + "px";
+
+    document.body.appendChild(span);
+}
+</script>
+
+</body>
+</html>
